@@ -1,0 +1,4 @@
+
+# class Table:
+#   def __init__(self, root, data) -> None:
+#      for i in data:

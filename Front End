@@ -1,0 +1,270 @@
+from tkinter import *
+
+# import mysql.connector
+#from tkinter import messagebox
+#from tkinter import ttk
+import mysql.connector as mysql
+
+# my_pass =  "Root@123"
+# aditya = "mysql"
+
+db = mysql.connect(host="localhost", user="root", password="password", database="cwc")
+cur = db.cursor(buffered=True)   #use to store database tables
+# fetches all the rows from server
+
+class Table:
+  def __init__(self, root, data, columns) -> None:
+    new_window = Toplevel(root)
+    for index,value in  enumerate(columns):      #taking data on indexed form
+      e = Entry(new_window, width=15, font=('Arial', 16, 'bold'), background="dark grey")
+      e.grid(row=0, column=index)
+      e.insert(END, value)
+      # e['state'] = 'disabled'
+
+    for i, vali in enumerate(data):
+      for j, valj in enumerate(vali):
+        e = Entry(new_window, width=15, font=('Arial', 14, 'normal'))
+        e.grid(row = i + 1, column=j)
+        e.insert(END, valj)
+        # e['state'] = 'disabled'
+
+
+def show_players():
+    db = mysql.connect(
+        host="localhost", user="root", password="password", database="cwc"
+    )
+    cur = db.cursor(buffered=True)
+    cur.execute("SELECT * FROM player")
+    player = cur.fetchall()
+
+    
+    player_columns = ["PLAYER ID", "TEAM ID", "NO OF WORLD CUP", "NO OF MATCHES", "BATTING AVERAGE", "NO OF SIXES", "NO OF FOURS", "NO OF TOTALRUNS", "NO OF T20", "NO OF ODI",  "NO OF TEST", "NO OF WICKETS", "TYPE OF BOWLER" , "ECONOMY"]
+
+    table = Table(CWC_root, player, player_columns)
+
+def show_matches():
+  db = mysql.connect(
+        host="localhost", user="root", password="password", database="cwc"
+    )
+  cur = db.cursor(buffered=True)
+  cur.execute("SELECT * FROM matches")
+  matches = cur.fetchall()
+  match_columns = ["MATCH ID",
+    "MATCH DATE",
+    "MATCH TIME",
+    "TEAM 1 NAME",
+    "TEAM 2 NAME",
+    "LOSER",
+    "WINNER",
+    "STADIUM",
+    "UMPIRE ID"
+]
+  table = Table(CWC_root, matches, match_columns)
+
+
+def show_teams():
+  db = mysql.connect(
+        host="localhost", user="root", password="password", database="cwc"
+    )
+  cur = db.cursor(buffered=True)
+  cur.execute("SELECT * FROM TEAM")
+  teams = cur.fetchall()
+  team_columns = [ "TEAM ID",
+    "TEAM RANK",
+    "TEAM NAME",
+    "COUNTRY NAME",
+    "NO. OF WIN",
+    "NO. OF LOSSES",
+    "NO. OF DRAWS",
+    "NO. OF BOWLERS"
+    "NO. OF BATSMEN"
+]
+  table = Table(CWC_root, teams, team_columns)
+
+
+def show_umpires():
+  db = mysql.connect(
+        host="localhost", user="root", password="password", database="cwc"
+    )
+  cur = db.cursor(buffered=True)
+  cur.execute("SELECT * FROM umpire")
+  umpires = cur.fetchall()
+  umpire_columns = ["UMPIRE ID",
+  "UMPIRE NAME",
+  "NO. OF MATCHES",
+  "COUNTRY"
+]
+  table = Table(CWC_root, umpires, umpire_columns)
+
+
+def show_coaches():
+  db = mysql.connect(
+        host="localhost", user="root", password="password", database="cwc"
+    )
+  cur = db.cursor(buffered=True)
+  cur.execute("SELECT * FROM coach")
+  coaches = cur.fetchall()
+  coach_columns = ["COACH ID",
+  "TEAM ID",
+  "COACH NAME",
+]
+  table = Table(CWC_root, coaches, coach_columns)
+
+db.commit()    #storing changes performed by a transaction
+db.close()
+
+print("Success")
+
+CWC_root = Tk()
+# scrollbar = Scrollbar(CWC_root, orient='vertical', command=)
+
+CWC_root.geometry("1550x850")
+CWC_root.minsize(1000, 550)
+# CWC_root.maxsize(1550,850)
+CWC_root.config(bg="sky blue")
+
+CWC_root.title("CRICKET WORLD CUP")
+
+text_frame = Frame(CWC_root, bg="dark blue", borderwidth=2, relief=SUNKEN)
+text_frame.pack(side=TOP, fill=X)
+
+CWC = Label(
+    text_frame,
+    text="CRICKET WORLD CUP",
+    bg="dark blue",
+    fg="white",
+    pady=20,
+    font=("comicsansms", 35, "bold"),
+    borderwidth=5,
+    relief=SUNKEN,
+)
+CWC.pack(fill=X, ipady=1)
+
+image_frame = Frame(CWC_root, borderwidth=2, relief=SUNKEN)
+image_frame.pack(
+    side=TOP,
+    fill=X,
+)
+
+photo = PhotoImage(file="Stadium.png")
+image_label = Label(image_frame, image=photo, relief=SUNKEN)  # pady= 1, padx= 1 )
+image_label.pack(fill=X)  # ipady=2)
+
+#quote_label = Label(image_label, text="YOU DON'T PLAY FOR THE CROWD, YOU PLAY FOR THE COUNTRY.", fg="white", font=("arial, 18, bold"))
+#quote_label.pack()
+
+info_frame = Frame(CWC_root, borderwidth=5, relief=SUNKEN, bg="blue")
+info_frame.pack(side=TOP, fill=X)
+
+
+button_image_frame = Frame(CWC_root, bg="sky blue")
+button_image_frame.pack(side=TOP, fill=X)
+
+photo1 = PhotoImage(file="player.png")
+player_label = Label(button_image_frame, image=photo1, relief=SUNKEN, pady=1, padx=1)
+player_label.pack(ipadx=5, ipady=5, side=LEFT, padx=70, pady=5)
+
+photo2 = PhotoImage(file="bat_ball.png")
+bat_ball_label = Label(button_image_frame, image=photo2, relief=SUNKEN, pady=1, padx=1)
+bat_ball_label.pack(ipadx=5, ipady=5, side=LEFT, padx=65, pady=5)
+
+photo3 = PhotoImage(file="Team.png")
+team_label = Label(button_image_frame, image=photo3, relief=SUNKEN, pady=1, padx=1)
+team_label.pack(ipadx=5, ipady=5, side=LEFT, padx=50, pady=5)
+
+photo4 = PhotoImage(file="Coach.png")
+Coach_label = Label(button_image_frame, image=photo4, relief=SUNKEN, pady=1, padx=1)
+Coach_label.pack(ipadx=5, ipady=5, side=LEFT, padx=70, pady=5)
+
+photo5 = PhotoImage(file="Umpire.png")
+Umpire_label = Label(button_image_frame, image=photo5, relief=SUNKEN, pady=1, padx=1)
+Umpire_label.pack(ipadx=5, ipady=5, side=LEFT, padx=55, pady=5)
+
+button_frame = Frame(CWC_root, bg="sky blue")
+button_frame.pack(side=TOP, fill=X)
+
+info_label = Label(info_frame, text= " The International Cricket Council (ICC) is the world governing body of cricket.\n"
+ "Headquartered in Dubai, United Arab Emirates, its members are 108 national associations, with 12 Full Members and 96 Associate Members.\n"
+ "Founded in 1909 as the Imperial Cricket Conference, it was renamed the International Cricket Conference in 1965, and took up its current name in 1987.\n",
+ font=("comicsansms", 15), fg="white", bg="blue")
+info_label.pack(fill=X, side=TOP, ipady=3 )
+
+
+player_button = Button(
+    button_frame,
+    text="PLAYERS",
+    command=show_players,
+    font=("comicsansms", 15, "bold"),
+    relief=SUNKEN,
+    pady=1,
+    padx=1,
+    fg="black",
+    bg="white",
+    activebackground="grey",
+)
+player_button.pack(ipadx=2, ipady=1, side=LEFT, padx=90, pady=5, anchor=S)
+
+match_button = Button(
+    button_frame,
+    text="MATCHES",
+    font=("comicsansms", 15, "bold"),
+    relief=SUNKEN,
+        command=show_matches,
+
+    pady=1,
+    padx=1,
+    fg="black",
+    bg="white",
+    activebackground="grey",
+)
+match_button.pack(ipadx=2, ipady=1, side=LEFT, padx=90, pady=5, anchor=S)
+
+team_button = Button(
+    button_frame,
+    text="TEAMS",
+    font=("comicsansms", 15, "bold"),
+    relief=SUNKEN,
+        command=show_teams,
+
+    pady=1,
+    padx=1,
+    fg="black",
+    bg="white",
+    activebackground="grey",
+)
+team_button.pack(ipadx=2, ipady=1, side=LEFT, padx=90, pady=5, anchor=S)
+
+coaches_button = Button(
+    button_frame,
+    text="COACHES",
+    font=("comicsansms", 15, "bold"),
+    relief=SUNKEN,
+        command=show_coaches,
+
+    pady=1,
+    padx=1,
+    fg="black",
+    bg="white",
+    activebackground="grey",
+)
+coaches_button.pack(ipadx=2, ipady=1, side=LEFT, padx=90, pady=5, anchor=S)
+
+umpire_button = Button(
+    button_frame,
+    text="UMPIRES",
+    font=("comicsansms", 15, "bold"),
+    relief=SUNKEN,
+        command=show_umpires,
+
+    pady=1,
+    padx=1,
+    fg="black",
+    bg="white",
+    activebackground="grey",
+)
+umpire_button.pack(ipadx=2, ipady=1, side=LEFT, padx=90, pady=5, anchor=S)
+
+CWC_root.mainloop()
+
+
+
