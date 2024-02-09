@@ -30,8 +30,8 @@ Install the required libraries if not already installed:
 
 pip install mysql-connector-python
 
-Run the main.py file to launch the application.
+Run the FrontEnd.py file to launch the application.
 
-python main.py
+python FrontEnd.py
 
 Use the buttons provided to navigate through different sections of the application and view database information.
